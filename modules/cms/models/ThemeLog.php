@@ -29,7 +29,7 @@ class ThemeLog extends Model
      * @var array Relations
      */
     public $belongsTo = [
-        'user' => ['Backend\Models\User']
+        'user' => \Backend\Models\User::class
     ];
 
     protected $themeCache;
@@ -73,7 +73,7 @@ class ThemeLog extends Model
         $newContent = $template->toCompiled();
         $oldContent = $template->getOriginal('content');
 
-        if ($newContent === $oldContent && !$isDelete) {
+        if ($newContent === $oldContent && $templateName === $oldTemplateName && !$isDelete) {
             traceLog($newContent, $oldContent);
             traceLog('Content not dirty for: '. $template->getObjectTypeDirName().'/'.$template->fileName);
             return;

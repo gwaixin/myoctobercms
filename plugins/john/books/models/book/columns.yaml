@@ -1,0 +1,16 @@
+columns:
+    title:
+        label: Title
+        type: text
+        searchable: true
+    description:
+        label: Description
+        type: text
+        searchable: true
+    author:
+        label: Author
+        type: text
+        searchable: true
+    publish_date:
+        label: Publish
+        type: date

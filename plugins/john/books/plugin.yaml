@@ -1,0 +1,11 @@
+plugin:
+    name: 'john.books::lang.plugin.name'
+    description: 'Testing books'
+    author: John
+    icon: oc-icon-book
+    homepage: ''
+navigation:
+    books:
+        label: 'john.books::lang.plugin.name'
+        url: john/books/books
+        icon: icon-life-ring

@@ -2,7 +2,6 @@
 
 use Twig_Node;
 use Twig_Token;
-use Twig_Node_Print;
 use Twig_TokenParser;
 
 /**
@@ -18,7 +17,7 @@ class FlashTokenParser extends Twig_TokenParser
      *
      * @param Twig_Token $token A Twig_Token instance
      *
-     * @return Twig_NodeInterface A Twig_NodeInterface instance
+     * @return Twig_Node A Twig_Node instance
      */
     public function parse(Twig_Token $token)
     {

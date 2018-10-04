@@ -34,12 +34,12 @@ class Table extends WidgetBase
     /**
      * @var Backend\Widgets\Table\DatasourceBase
      */
-    protected $dataSource = null;
+    protected $dataSource;
 
     /**
      * @var string Field name used for request data.
      */
-    protected $fieldName = null;
+    protected $fieldName;
 
     /**
      * @var string
@@ -121,6 +121,7 @@ class Table extends WidgetBase
 
         $this->vars['recordsPerPage'] = $this->getConfig('recordsPerPage', false) ?: 'false';
         $this->vars['postbackHandlerName'] = $this->getConfig('postbackHandlerName', 'onSave');
+        $this->vars['searching'] = $this->getConfig('searching', false);
         $this->vars['adding'] = $this->getConfig('adding', true);
         $this->vars['deleting'] = $this->getConfig('deleting', true);
         $this->vars['toolbar'] = $this->getConfig('toolbar', true);
@@ -216,6 +217,28 @@ class Table extends WidgetBase
 
         return [
             'records' => $this->dataSource->getRecords(post('offset'), $count),
+            'count' => $this->dataSource->getCount()
+        ];
+    }
+
+    public function onServerSearchRecords()
+    {
+        // Disable asset broadcasting
+        $this->controller->flushAssets();
+
+        if ($this->isClientDataSource()) {
+            throw new SystemException('The Table widget is not configured to use the server data source.');
+        }
+
+        $count = post('count');
+
+        // Oddly, JS may pass false as a string (@todo)
+        if ($count === 'false') {
+            $count = false;
+        }
+
+        return [
+            'records' => $this->dataSource->searchRecords(post('query'), post('offset'), $count),
             'count' => $this->dataSource->getCount()
         ];
     }

@@ -32,15 +32,6 @@
 @custom-dark-primary: mix(black, saturate(@brand-primary, 5%), 15%);
 
 //
-// Sidenav
-//
-
-#layout-sidenav ul li a .nav-label,
-#layout-sidenav ul li a .nav-icon {
-    text-shadow: 0 -1px 0 fade(darken(@brand-primary, 20%), 60%);
-}
-
-//
 // Sidenav Tree
 //
 
@@ -51,6 +42,15 @@
     > ul li.active {
         border-color: @brand-secondary;
     }
+}
+
+//
+// Asset List
+//
+
+.control-assetlist ul li.active a:after,
+.control-assetlist ul li.active a.link:after {
+    background: @brand-secondary;
 }
 
 //
@@ -127,7 +127,7 @@ table.table.data {
 
 .fancy-layout .control-tabs.primary-tabs,
 .fancy-layout.control-tabs.primary-tabs {
-    > div > ul.nav-tabs.master-area {
+    &.master-area > div > ul.nav-tabs {
         background: @brand-secondary;
     }
 }
@@ -160,5 +160,17 @@ div.control-componentlist {
 .stripe-loading-indicator {
     .stripe, .stripe-loaded {
         background: @brand-accent;
+    }
+}
+
+//
+// Balloon Selector
+//
+
+.control-balloon-selector {
+    ul {
+        li.active {
+            background: @brand-secondary !important;
+        }
     }
 }

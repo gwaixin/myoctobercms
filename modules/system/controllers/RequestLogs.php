@@ -1,17 +1,11 @@
 <?php namespace System\Controllers;
 
-use Str;
 use Lang;
-use File;
 use Flash;
-use Backend;
-use Redirect;
 use BackendMenu;
 use Backend\Classes\Controller;
-use ApplicationException;
 use System\Classes\SettingsManager;
 use System\Models\RequestLog;
-use Exception;
 
 /**
  * Request Logs controller
@@ -21,17 +15,31 @@ use Exception;
  */
 class RequestLogs extends Controller
 {
+    /**
+     * @var array Extensions implemented by this controller.
+     */
     public $implement = [
-        'Backend.Behaviors.FormController',
-        'Backend.Behaviors.ListController'
+        \Backend\Behaviors\FormController::class,
+        \Backend\Behaviors\ListController::class
     ];
-
-    public $requiredPermissions = ['system.access_logs'];
-
+    /**
+     * @var array `FormController` configuration.
+     */
     public $formConfig = 'config_form.yaml';
 
+    /**
+     * @var array `ListController` configuration.
+     */
     public $listConfig = 'config_list.yaml';
 
+    /**
+     * @var array Permissions required to view this page.
+     */
+    public $requiredPermissions = ['system.access_logs'];
+
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         parent::__construct();

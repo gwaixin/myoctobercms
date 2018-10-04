@@ -30,19 +30,10 @@ class ThemeUse extends Command
     protected $description = 'Switch the active theme.';
 
     /**
-     * Create a new command instance.
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
      * @return void
      */
-    public function fire()
+    public function handle()
     {
         if (!$this->confirmToProceed('Change the active theme?')) {
             return;

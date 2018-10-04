@@ -2,7 +2,6 @@
 
 use Illuminate\Console\Command;
 use System\Classes\UpdateManager;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use System\Classes\PluginManager;
 
@@ -30,22 +29,13 @@ class PluginInstall extends Command
     protected $description = 'Install a plugin from the October marketplace.';
 
     /**
-     * Create a new command instance.
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
      * @return void
      */
-    public function fire()
+    public function handle()
     {
         $pluginName = $this->argument('name');
-        $manager = UpdateManager::instance()->resetNotes();
+        $manager = UpdateManager::instance()->setNotesOutput($this->output);
 
         $pluginDetails = $manager->requestPluginDetails($pluginName);
 
@@ -64,10 +54,6 @@ class PluginInstall extends Command
         $this->output->writeln(sprintf('<info>Migrating plugin...</info>', $code));
         PluginManager::instance()->loadPlugins();
         $manager->updatePlugin($code);
-
-        foreach ($manager->getNotes() as $note) {
-            $this->output->writeln($note);
-        }
     }
 
     /**
@@ -79,14 +65,5 @@ class PluginInstall extends Command
         return [
             ['name', InputArgument::REQUIRED, 'The name of the plugin. Eg: AuthorName.PluginName'],
         ];
-    }
-
-    /**
-     * Get the console command options.
-     * @return array
-     */
-    protected function getOptions()
-    {
-        return [];
     }
 }

@@ -1,7 +1,5 @@
 <?php namespace Backend\FormWidgets;
 
-use Lang;
-use ApplicationException;
 use Backend\Classes\FormWidgetBase;
 
 /**
@@ -123,10 +121,6 @@ class RecordFinder extends FormWidgetBase
             'recordsPerPage',
         ]);
 
-        if ($this->formField->disabled) {
-            $this->previewMode = true;
-        }
-
         if (post('recordfinder_flag')) {
             $this->listWidget = $this->makeListWidget();
             $this->listWidget->bindToController();
@@ -180,6 +174,10 @@ class RecordFinder extends FormWidgetBase
     {
         $this->relationModel = $this->getLoadValue();
 
+        if ($this->formField->disabled) {
+            $this->previewMode = true;
+        }
+
         $this->vars['value'] = $this->getKeyValue();
         $this->vars['field'] = $this->formField;
         $this->vars['nameValue'] = $this->getNameValue();
@@ -213,7 +211,7 @@ class RecordFinder extends FormWidgetBase
     {
         list($model, $attribute) = $this->resolveModelAttribute($this->valueFrom);
 
-        if (!is_null($model)) {
+        if ($model !== null) {
             return $model->{$attribute};
         }
 

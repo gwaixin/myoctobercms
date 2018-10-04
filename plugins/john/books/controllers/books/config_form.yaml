@@ -1,0 +1,11 @@
+name: Books
+modelClass: John\Books\Models\Book
+form: $/john/books/models/book/fields.yaml
+defaultRedirect: john/books/books
+create:
+    redirect: 'john/books/books/update/:id'
+    redirectClose: john/books/books
+update:
+    redirect: john/books/books
+    redirectClose: john/books/books
+preview: {  }

@@ -1,6 +1,6 @@
 /*
  * Field Repeater plugin
- * 
+ *
  * Data attributes:
  * - data-control="fieldrepeater" - enables the plugin on an element
  * - data-option="value" - an option with a value
@@ -34,6 +34,7 @@
         sortableHandle: '.repeater-item-handle',
         sortableContainer: 'ul.field-repeater-items',
         titleFrom: null,
+        minItems: null,
         maxItems: null
     }
 
@@ -122,6 +123,13 @@
     }
 
     Repeater.prototype.togglePrompt = function () {
+        if (this.options.minItems && this.options.minItems > 0) {
+            var repeatedItems = this.$el.find('> .field-repeater-items > .field-repeater-item').length,
+                $removeItemBtn = this.$el.find('> .field-repeater-items > .field-repeater-item > .repeater-item-remove');
+
+            $removeItemBtn.toggleClass('disabled', !(repeatedItems > this.options.minItems))
+        }
+
         if (this.options.maxItems && this.options.maxItems > 0) {
             var repeatedItems = this.$el.find('> .field-repeater-items > .field-repeater-item').length,
                 $addItemBtn = this.$el.find('> .field-repeater-add-item')
@@ -181,7 +189,7 @@
         }
 
         if (this.options.titleFrom) {
-            $target = $('[data-field-name="'+this.options.titleFrom+'"]')
+            $target = $('[data-field-name="'+this.options.titleFrom+'"]', $item)
             if (!$target.length) {
                 $target = $item
             }
@@ -193,6 +201,11 @@
         var $textInput = $('input[type=text]:first', $target)
         if ($textInput.length) {
             return $textInput.val()
+        } else {
+            var $disabledTextInput = $('.text-field:first > .form-control', $target)
+            if ($disabledTextInput.length) {
+                return $disabledTextInput.text()
+            }
         }
 
         return defaultText

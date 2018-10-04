@@ -1,11 +1,8 @@
 <?php namespace Backend\FormWidgets;
 
 use Db;
-use Lang;
 use Backend\Classes\FormField;
 use Backend\Classes\FormWidgetBase;
-use ApplicationException;
-use SystemException;
 use Illuminate\Database\Eloquent\Relations\Relation as RelationBase;
 
 /**
@@ -29,11 +26,6 @@ class Relation extends FormWidgetBase
     public $nameFrom = 'name';
 
     /**
-     * @var string Model column to use for the description reference
-     */
-    public $descriptionFrom = 'description';
-
-    /**
      * @var string Custom SQL column selection to use for the name reference
      */
     public $sqlSelect;
@@ -42,6 +34,11 @@ class Relation extends FormWidgetBase
      * @var string Empty value to use if the relation is singluar (belongsTo)
      */
     public $emptyOption;
+
+    /**
+     * @var string Use a custom scope method for the list query.
+     */
+    public $scope;
 
     //
     // Object properties
@@ -64,8 +61,8 @@ class Relation extends FormWidgetBase
     {
         $this->fillFromConfig([
             'nameFrom',
-            'descriptionFrom',
             'emptyOption',
+            'scope',
         ]);
 
         if (isset($this->config->select)) {
@@ -116,6 +113,10 @@ class Relation extends FormWidgetBase
             // the exact same class, then it cannot be related to itself
             if ($model->exists && (get_class($model) == get_class($relationModel))) {
                 $query->where($relationModel->getKeyName(), '<>', $model->getKey());
+            }
+
+            if ($scopeMethod = $this->scope) {
+                $query->$scopeMethod($model);
             }
 
             // Even though "no constraints" is applied, belongsToMany constrains the query

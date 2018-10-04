@@ -1,0 +1,14 @@
+1.0.1:
+    - 'Initialize plugin.'
+1.0.2:
+    - 'Created table john_books_'
+    - builder_table_create_john_books_.php
+1.0.3:
+    - 'Updated table john_books_'
+    - builder_table_update_john_books_detail.php
+1.0.4:
+    - 'Drop table john_books_detail'
+    - builder_table_delete_john_books_detail.php
+1.0.5:
+    - 'Created table john_books_'
+    - builder_table_create_john_books__2.php

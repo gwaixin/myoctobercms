@@ -35,7 +35,7 @@ class FormTabs implements IteratorAggregate, ArrayAccess
     /**
      * @var bool Should these tabs stretch to the bottom of the page layout.
      */
-    public $stretch = null;
+    public $stretch;
 
     /**
      * @var boolean If set to TRUE, fields will not be displayed in tabs.
@@ -46,6 +46,11 @@ class FormTabs implements IteratorAggregate, ArrayAccess
      * @var string Specifies a CSS class to attach to the tab container.
      */
     public $cssClass;
+
+    /**
+     * @var array Specifies a CSS class to an individual tab pane.
+     */
+    public $paneCssClass;
 
     /**
      * Constructor.
@@ -87,6 +92,10 @@ class FormTabs implements IteratorAggregate, ArrayAccess
 
         if (array_key_exists('cssClass', $config)) {
             $this->cssClass = $config['cssClass'];
+        }
+
+        if (array_key_exists('paneCssClass', $config)) {
+            $this->paneCssClass = $config['paneCssClass'];
         }
     }
 
@@ -166,6 +175,27 @@ class FormTabs implements IteratorAggregate, ArrayAccess
     }
 
     /**
+     * Returns a tab pane CSS class.
+     * @param string $index
+     * @param string $label
+     * @return string
+     */
+    public function getPaneCssClass($index = null, $label = null)
+    {
+        if (is_string($this->paneCssClass)) {
+            return $this->paneCssClass;
+        }
+
+        if ($index !== null && isset($this->paneCssClass[$index])) {
+            return $this->paneCssClass[$index];
+        }
+
+        if ($label !== null && isset($this->paneCssClass[$label])) {
+            return $this->paneCssClass[$label];
+        }
+    }
+
+    /**
      * Get an iterator for the items.
      * @return ArrayIterator
      */
@@ -206,6 +236,6 @@ class FormTabs implements IteratorAggregate, ArrayAccess
      */
     public function offsetGet($offset)
     {
-        return isset($this->fields[$offset]) ? $this->fields[$offset] : null;
+        return $this->fields[$offset] ?? null;
     }
 }

@@ -1,7 +1,6 @@
 <?php namespace Backend\Controllers;
 
 use Redirect;
-use BackendAuth;
 use BackendMenu;
 use Backend\Classes\Controller;
 use Backend\Widgets\ReportContainer;
@@ -18,6 +17,7 @@ class Index extends Controller
     use \Backend\Traits\InspectableContainer;
 
     /**
+     * @var array Permissions required to view this page.
      * @see checkPermissionRedirect()
      */
     public $requiredPermissions = [];

@@ -1,0 +1,25 @@
+tabs:
+    fields:
+        title:
+            label: Title
+            span: full
+            type: text
+            tab: 'Tab 1'
+        description:
+            label: Description
+            span: full
+            placeholder: 'Add Description'
+            type: text
+            tab: 'Tab 1'
+        author:
+            label: Author
+            span: auto
+            placeholder: 'Enter author''s name'
+            type: text
+            tab: 'Tab 1'
+        publish_date:
+            label: 'Publish Date'
+            span: auto
+            placeholder: 'Enter publish date'
+            type: text
+            tab: 'Tab 1'

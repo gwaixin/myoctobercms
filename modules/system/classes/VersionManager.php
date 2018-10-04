@@ -1,6 +1,5 @@
 <?php namespace System\Classes;
 
-use Str;
 use File;
 use Yaml;
 use Db;
@@ -35,6 +34,11 @@ class VersionManager
      * @var array
      */
     protected $notes = [];
+
+    /**
+     * @var \Illuminate\Console\OutputStyle
+     */
+    protected $notesOutput;
 
     /**
      * Cache of plugin versions as files.
@@ -74,7 +78,7 @@ class VersionManager
      */
     public function updatePlugin($plugin, $stopOnVersion = null)
     {
-        $code = (is_string($plugin)) ? $plugin : $this->pluginManager->getIdentifier($plugin);
+        $code = is_string($plugin) ? $plugin : $this->pluginManager->getIdentifier($plugin);
 
         if (!$this->hasVersionFile($code)) {
             return false;
@@ -85,7 +89,7 @@ class VersionManager
 
         // No updates needed
         if ($currentVersion == $databaseVersion) {
-            $this->note('<info>Nothing to update.</info>');
+            $this->note('- <info>Nothing to update.</info>');
             return;
         }
 
@@ -106,7 +110,7 @@ class VersionManager
      */
     public function listNewVersions($plugin)
     {
-        $code = (is_string($plugin)) ? $plugin : $this->pluginManager->getIdentifier($plugin);
+        $code = is_string($plugin) ? $plugin : $this->pluginManager->getIdentifier($plugin);
 
         if (!$this->hasVersionFile($code)) {
             return [];
@@ -150,7 +154,7 @@ class VersionManager
 
         $this->setDatabaseVersion($code, $version);
 
-        $this->note(sprintf('<info>v%s: </info> %s', $version, $comment));
+        $this->note(sprintf('- <info>v%s: </info> %s', $version, $comment));
     }
 
     /**
@@ -160,7 +164,7 @@ class VersionManager
      */
     public function removePlugin($plugin, $stopOnVersion = null)
     {
-        $code = (is_string($plugin)) ? $plugin : $this->pluginManager->getIdentifier($plugin);
+        $code = is_string($plugin) ? $plugin : $this->pluginManager->getIdentifier($plugin);
 
         if (!$this->hasVersionFile($code)) {
             return false;
@@ -224,7 +228,7 @@ class VersionManager
             $history->delete();
         }
 
-        return (($countHistory + $countVersions) > 0) ? true : false;
+        return ($countHistory + $countVersions) > 0;
     }
 
     //
@@ -241,8 +245,7 @@ class VersionManager
             return self::NO_VERSION_VALUE;
         }
 
-        $latest = trim(key(array_slice($versionInfo, -1, 1)));
-        return $latest;
+        return trim(key(array_slice($versionInfo, -1, 1)));
     }
 
     /**
@@ -318,13 +321,11 @@ class VersionManager
         if (!isset($this->databaseVersions[$code])) {
             $this->databaseVersions[$code] = Db::table('system_plugin_versions')
                 ->where('code', $code)
-                ->pluck('version')
+                ->value('version')
             ;
         }
 
-        return (isset($this->databaseVersions[$code]))
-            ? $this->databaseVersions[$code]
-            : self::NO_VERSION_VALUE;
+        return $this->databaseVersions[$code] ?? self::NO_VERSION_VALUE;
     }
 
     /**
@@ -389,6 +390,11 @@ class VersionManager
          * Execute the database PHP script
          */
         $updateFile = $this->pluginManager->getPluginPath($code) . '/updates/' . $script;
+
+        if (!File::isFile($updateFile)) {
+            $this->note('- <error>v' . $version . ':  Migration file "' . $script . '" not found</error>');
+        }
+
         $this->updater->setUp($updateFile);
 
         Db::table('system_plugin_history')->insert([
@@ -428,7 +434,11 @@ class VersionManager
             return $this->databaseHistory[$code];
         }
 
-        $historyInfo = Db::table('system_plugin_history')->where('code', $code)->orderBy('id')->get();
+        $historyInfo = Db::table('system_plugin_history')
+            ->where('code', $code)
+            ->orderBy('id')
+            ->get()
+            ->all();
 
         return $this->databaseHistory[$code] = $historyInfo;
     }
@@ -471,7 +481,13 @@ class VersionManager
      */
     protected function note($message)
     {
-        $this->notes[] = $message;
+        if ($this->notesOutput !== null) {
+            $this->notesOutput->writeln($message);
+        }
+        else {
+            $this->notes[] = $message;
+        }
+
         return $this;
     }
 
@@ -486,11 +502,26 @@ class VersionManager
 
     /**
      * Resets the notes store.
-     * @return array
+     * @return self
      */
     public function resetNotes()
     {
+        $this->notesOutput = null;
+
         $this->notes = [];
+
+        return $this;
+    }
+
+    /**
+     * Sets an output stream for writing notes.
+     * @param  Illuminate\Console\Command $output
+     * @return self
+     */
+    public function setNotesOutput($output)
+    {
+        $this->notesOutput = $output;
+
         return $this;
     }
 }

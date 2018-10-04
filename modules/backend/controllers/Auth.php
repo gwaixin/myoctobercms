@@ -21,8 +21,14 @@ use Exception;
  */
 class Auth extends Controller
 {
+    /**
+     * @var array Public controller actions
+     */
     protected $publicActions = ['index', 'signin', 'signout', 'restore', 'reset'];
 
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -48,9 +54,8 @@ class Auth extends Controller
             if (post('postback')) {
                 return $this->signin_onSubmit();
             }
-            else {
-                $this->bodyClass .= ' preload';
-            }
+
+            $this->bodyClass .= ' preload';
         }
         catch (Exception $ex) {
             Flash::error($ex->getMessage());
@@ -69,14 +74,23 @@ class Auth extends Controller
             throw new ValidationException($validation);
         }
 
+        if (($remember = config('cms.backendForceRemember', true)) === null) {
+            $remember = (bool) post('remember');
+        }
+
         // Authenticate user
         $user = BackendAuth::authenticate([
             'login' => post('login'),
             'password' => post('password')
-        ], true);
+        ], $remember);
 
-        // Load version updates
-        UpdateManager::instance()->update();
+        try {
+            // Load version updates
+            UpdateManager::instance()->update();
+        }
+        catch (Exception $ex) {
+            Flash::error($ex->getMessage());
+        }
 
         // Log the sign in event
         AccessLog::add($user);

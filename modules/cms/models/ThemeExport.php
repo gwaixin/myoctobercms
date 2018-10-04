@@ -1,7 +1,6 @@
 <?php namespace Cms\Models;
 
 use File;
-use Lang;
 use Model;
 use Response;
 use ApplicationException;
@@ -68,7 +67,9 @@ class ThemeExport extends Model
 
     public function setThemeAttribute($theme)
     {
-        if (!$theme instanceof CmsTheme) return;
+        if (!$theme instanceof CmsTheme) {
+            return;
+        }
 
         $this->attributes['themeName'] = $theme->getConfigValue('name', $theme->getDirName());
         $this->attributes['dirName'] = $theme->getDirName();
@@ -86,17 +87,22 @@ class ThemeExport extends Model
             $zipName = uniqid('oc');
             $zipPath = temp_path().'/'.$zipName;
 
-            if (!File::makeDirectory($tempPath))
+            if (!File::makeDirectory($tempPath)) {
                 throw new ApplicationException('Unable to create directory '.$tempPath);
+            }
 
-            if (!File::makeDirectory($metaPath = $tempPath . '/meta'))
+            if (!File::makeDirectory($metaPath = $tempPath . '/meta')) {
                 throw new ApplicationException('Unable to create directory '.$metaPath);
+            }
 
             File::copy($themePath.'/theme.yaml', $tempPath.'/theme.yaml');
             File::copyDirectory($themePath.'/meta', $metaPath);
 
             foreach ($this->folders as $folder) {
-                if (!array_key_exists($folder, $this->getFoldersOptions())) continue;
+                if (!array_key_exists($folder, $this->getFoldersOptions())) {
+                    continue;
+                }
+
                 File::copyDirectory($themePath.'/'.$folder, $tempPath.'/'.$folder);
             }
 
@@ -137,5 +143,4 @@ class ThemeExport extends Model
 
         return $result;
     }
-
 }

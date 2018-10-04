@@ -32,11 +32,15 @@ class User extends UserBase
      * Relations
      */
     public $belongsToMany = [
-        'groups' => ['Backend\Models\UserGroup', 'table' => 'backend_users_groups']
+        'groups' => [UserGroup::class, 'table' => 'backend_users_groups']
+    ];
+
+    public $belongsTo = [
+        'role' => UserRole::class
     ];
 
     public $attachOne = [
-        'avatar' => ['System\Models\File']
+        'avatar' => \System\Models\File::class
     ];
 
     /**
@@ -92,12 +96,11 @@ class User extends UserBase
         if ($this->avatar) {
             return $this->avatar->getThumb($size, $size, $options);
         }
-        else {
-            return '//www.gravatar.com/avatar/' .
-                md5(strtolower(trim($this->email))) .
-                '?s='. $size .
-                '&d='. urlencode($default);
-        }
+
+        return '//www.gravatar.com/avatar/' .
+            md5(strtolower(trim($this->email))) .
+            '?s='. $size .
+            '&d='. urlencode($default);
     }
 
     /**
@@ -144,9 +147,22 @@ class User extends UserBase
     public function getGroupsOptions()
     {
         $result = [];
+
         foreach (UserGroup::all() as $group) {
             $result[$group->id] = [$group->name, $group->description];
         }
+
+        return $result;
+    }
+
+    public function getRoleOptions()
+    {
+        $result = [];
+
+        foreach (UserRole::all() as $role) {
+            $result[$role->id] = [$role->name, $role->description];
+        }
+
         return $result;
     }
 }

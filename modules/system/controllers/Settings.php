@@ -3,7 +3,6 @@
 use Lang;
 use Flash;
 use Backend;
-use Redirect;
 use BackendMenu;
 use System\Classes\SettingsManager;
 use Backend\Classes\Controller;
@@ -24,8 +23,14 @@ class Settings extends Controller
      */
     protected $formWidget;
 
+    /**
+     * @var array Permissions required to view this page.
+     */
     public $requiredPermissions = [];
 
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -160,8 +165,7 @@ class Settings extends Controller
         }
 
         $class = $item->class;
-        $model = $class::instance();
-        return $model;
+        return $class::instance();
     }
 
     /**

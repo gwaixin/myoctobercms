@@ -15,6 +15,7 @@ use October\Rain\Html\Helper as HtmlHelper;
 class ControllerBehavior extends ExtensionBase
 {
     use \Backend\Traits\WidgetMaker;
+    use \Backend\Traits\SessionMaker;
     use \System\Traits\AssetMaker;
     use \System\Traits\ConfigMaker;
     use \System\Traits\ViewMaker {
@@ -80,7 +81,7 @@ class ControllerBehavior extends ExtensionBase
         /*
          * Return all config
          */
-        if (is_null($name)) {
+        if ($name === null) {
             return $this->config;
         }
 

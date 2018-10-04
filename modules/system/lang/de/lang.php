@@ -129,6 +129,8 @@ return [
         'deleting_layout' => 'Lösche Layout...',
         'sending' => 'Sende Nachricht...',
         'return' => 'Zurück zur Vorlagen-Liste',
+        'options' => 'Optionen',
+        'disable_auto_inline_css' => 'Automtische inline CSS deaktivieren',
     ],
     'install' => [
         'project_label' => 'Mit Projekt verbinden',
@@ -231,5 +233,9 @@ return [
         'manage_editor' => 'Code-Editor-Einstellungen verwalten',
         'view_the_dashboard' => 'Dashboard einsehen',
         'manage_branding' => 'Backend individualisieren'
-    ]
+    ],
+    'media' => [
+        'invalid_path' => "Ungültiger Dateipfad: ':path'.",
+        'folder_size_items' => 'Datei(en)',
+    ],
 ];
