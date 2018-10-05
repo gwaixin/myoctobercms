@@ -18,8 +18,8 @@ tabs:
             type: text
             tab: 'Tab 1'
         publish_date:
-            label: 'Publish Date'
+            label: 'Publish date'
+            mode: date
             span: auto
-            placeholder: 'Enter publish date'
-            type: text
+            type: datepicker
             tab: 'Tab 1'

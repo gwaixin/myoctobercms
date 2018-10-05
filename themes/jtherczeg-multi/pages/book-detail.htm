@@ -1,0 +1,47 @@
+title = "Book Detail"
+url = "/books/:id"
+layout = "common"
+description = "book detail"
+is_hidden = 0
+
+[builderDetails book]
+modelClass = "John\Books\Models\Book"
+identifierValue = "{{ :id }}"
+modelKeyColumn = "id"
+displayColumn = "title"
+notFoundMessage = "Record not found"
+
+[builderDetails builderDetails2]
+modelClass = "John\Books\Models\Book"
+identifierValue = "{{ :id }}"
+modelKeyColumn = "id"
+displayColumn = "description"
+notFoundMessage = "Record not found"
+==
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+          <h3>Book Detail</h3>
+          {% set record = book.record %}
+					<section class="panel panel-default">
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-4">
+									<img src="https://picsum.photos/1000/1200/?random" alt="" class="img-fluid" style="width:100%;">
+								</div>
+								<div class="col-md-8">
+									<h2 class="title">"{{ attribute(record, 'title') }}"</h2>
+									<small>by {{ attribute(record, 'author') }}</small> <br>
+									<small>{{ attribute(record, 'publish_date') }}</small>
+									<p>{{ attribute(record, 'description') }}</p>
+									<div class="row">
+										<div class="col-md-6">100 Purchased</div>
+										<div class="col-md-6">5 star rate</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</section>
+        </div>
+    </div>
+</div>

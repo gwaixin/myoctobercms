@@ -1,0 +1,46 @@
+title = "Books"
+url = "/books"
+layout = "common"
+description = "Just a book"
+meta_title = "Books"
+meta_description = "All about books"
+is_hidden = 0
+
+[builderList books]
+modelClass = "John\Books\Models\Book"
+scope = "-"
+scopeValue = "{{ :scope }}"
+displayColumn = "title"
+noRecordsMessage = "No records found"
+detailsPage = "book-detail"
+detailsKeyColumn = "id"
+detailsUrlParameter = ":id"
+recordsPerPage = 5
+pageNumber = "{{ :page }}"
+==
+<?php
+function onStart()
+{
+//$data = \john\books\Models\book::find(1);
+//$this['data'] = $data;
+}
+?>
+==
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Books List</h3>
+            {% set records =books.records %}
+            
+            <ul class="list-group">
+            {% for record in records %}
+                <li class="list-group-item">
+                    <a href="/books/{{ record.id }}"><span class="title">{{ attribute(record, 'title') }}</span></a>
+                    <p>{{ attribute(record, 'description') }}</p>
+                    <small class="date">{{ attribute(record, 'publish_date') }}</small>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
